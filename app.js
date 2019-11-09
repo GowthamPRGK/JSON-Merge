@@ -88,10 +88,7 @@ if(command === "MergeFiles")
         })     
     });
 }
-else if(command === 'Search'){
-    var arr = argv.w.toString().split(',');
-    arr.forEach(word => {
-        search.searchWord(word);
-    });
+else{
+    console.log("Invalid command")
 }
 
