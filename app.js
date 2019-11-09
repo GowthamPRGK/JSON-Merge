@@ -34,15 +34,21 @@ if(command === "MergeFiles")
 {
     var inputFile = argv.ifn; //Input file base name
     var testFolder = argv.fp; //Input file location
+    var outputFile = argv.ofn //Output file base name
     testFolder = './'+testFolder+'/';
     var res={};
+    var counter=1;
+    console.log(counter);
     fs.readdir(testFolder, (err, files) => { //reading all the files in the given file location
         if(err) throw err;
         files.sort();  //sorting the files
         asyncLoop(files,function(file,next){
             var filename=file.split('.')[0];
-            var sLength = filename.length; //length of the input file base name
-            if(filename.substring(0,sLength-1)===inputFile){ //Checking whether the file name matches with the given base name
+            var regexStr= filename.match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g); //regular exp to seperate the letters and number part from the file name
+            console.log(regexStr);
+            if(regexStr[0]===outputFile)
+            counter++
+            if(regexStr[0]===inputFile){ //Checking whether the file name matches with the given base name
                 fs.readFile('./'+testFolder+'/'+filename+'.json',(err,jsonstring)=>{
                     console.log("Reading File: "+file);
                     if (err) {
@@ -75,7 +81,7 @@ if(command === "MergeFiles")
             console.log('The resultant JSON size is:' + sSize);
             if(sSize<=argv.ms)
             {
-                fs.writeFile(argv.ofn+'.json',result,function(err){if(err) throw err});
+                fs.writeFile('./'+testFolder+'/'+argv.ofn+counter+'.json',result,function(err){if(err) throw err});
             }else{
                 console.log("File size limit exceeded");
             }
